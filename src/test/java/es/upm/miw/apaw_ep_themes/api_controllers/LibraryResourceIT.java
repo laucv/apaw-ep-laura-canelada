@@ -30,7 +30,7 @@ public class LibraryResourceIT {
 
     @Test
     void testCreateLibraryException() {
-        LibraryDto libraryDto = new LibraryDto((String) null);
+        LibraryDto libraryDto = new LibraryDto();
         this.webTestClient
                 .post().uri(LibraryResource.LIBRARIES)
                 .body(BodyInserters.fromObject(libraryDto))

@@ -18,8 +18,8 @@ public class LibraryDto {
     }
 
     public LibraryDto(Library library) {
+        this(library.getName());
         this.id = library.getId();
-        this.name = library.getName();
     }
 
     public String getId() {
