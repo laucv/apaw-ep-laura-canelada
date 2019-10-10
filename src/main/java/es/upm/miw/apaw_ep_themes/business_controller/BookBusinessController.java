@@ -20,23 +20,29 @@ public class BookBusinessController {
     private LibraryDao libraryDao;
 
     @Autowired
-    public BookBusinessController(BookDao bookDao, LibraryDao libraryDao){
+    public BookBusinessController(BookDao bookDao, LibraryDao libraryDao) {
         this.bookDao = bookDao;
         this.libraryDao = libraryDao;
     }
 
-    public BookDto create(BookDto bookDto){
+    public BookDto create(BookDto bookDto) {
         Library library = this.libraryDao.findById(bookDto.getLibraryId())
-                        .orElseThrow(() -> new NotFoundException("User id: " + bookDto.getLibraryId()));
+                .orElseThrow(() -> new NotFoundException("User id: " + bookDto.getLibraryId()));
         Book book = new Book(bookDto.getTitle(), bookDto.getAuthor(), library);
         this.bookDao.save(book);
         return new BookDto(book);
     }
 
-    public List<BookDto> findByAuthor(String author){
+    public List<BookDto> findByAuthor(String author) {
         return this.bookDao.findAll().stream()
-                .filter(book -> book.getAuthor().replaceAll("\\s","").equals(author))
+                .filter(book -> book.getAuthor().replaceAll("\\s", "").equals(author))
                 .map(BookDto::new)
                 .collect(Collectors.toList());
+    }
+
+    public void updateTitle(String id, String title) {
+        Book book = this.bookDao.findById(id).orElseThrow(() -> new NotFoundException("Book id: " + id));
+        book.setTitle(title);
+        this.bookDao.save(book);
     }
 }
