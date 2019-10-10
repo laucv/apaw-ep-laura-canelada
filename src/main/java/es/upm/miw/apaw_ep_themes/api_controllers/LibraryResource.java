@@ -17,12 +17,12 @@ public class LibraryResource {
     private LibraryBusinessController libraryBusinessController;
 
     @Autowired
-    public  LibraryResource (LibraryBusinessController libraryBusinessController){
+    public LibraryResource(LibraryBusinessController libraryBusinessController) {
         this.libraryBusinessController = libraryBusinessController;
     }
 
     @PostMapping
-    public LibraryDto create(@RequestBody LibraryDto libraryDto){
+    public LibraryDto create(@RequestBody LibraryDto libraryDto) {
         libraryDto.validate();
         return this.libraryBusinessController.create(libraryDto);
     }

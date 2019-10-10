@@ -12,11 +12,11 @@ public class LibraryBusinessController {
     private LibraryDao libraryDao;
 
     @Autowired
-    public LibraryBusinessController(LibraryDao libraryDao){
+    public LibraryBusinessController(LibraryDao libraryDao) {
         this.libraryDao = libraryDao;
     }
 
-    public LibraryDto create(LibraryDto libraryDto){
+    public LibraryDto create(LibraryDto libraryDto) {
         Library library = new Library(libraryDto.getName());
         this.libraryDao.save(library);
         return new LibraryDto(library);
