@@ -21,24 +21,7 @@ public class BookResourceIT {
 
     @Test
     void testCreate() {
-        LibraryDto libraryDto = new LibraryDto("Biblioteca");
-        String libraryId = this.webTestClient
-                .post().uri(LibraryResource.LIBRARIES)
-                .body(BodyInserters.fromObject(libraryDto))
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(BookDto.class)
-                .returnResult().getResponseBody().getId();
-        BookDto bookDto = this.webTestClient
-                .post().uri(BookResource.BOOKS)
-                .body(BodyInserters.fromObject(new BookDto("El ladrón del rayo", "Rick Riordan", libraryId)))
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(BookDto.class).returnResult().getResponseBody();
-        assertNotNull(bookDto);
-        assertEquals("El ladrón del rayo", bookDto.getTitle());
-        assertEquals("Rick Riordan", bookDto.getAuthor());
-        assertEquals(libraryId, bookDto.getLibraryId());
+        this.createBook("El ladrón del rayo", "Rick Riordan", this.createLibrary("Biblioteca"));
     }
 
     @Test
@@ -70,16 +53,18 @@ public class BookResourceIT {
                 .expectBody(BookDto.class).returnResult().getResponseBody().getId();
     }
 
-    @Test
-    void testSearch(){
-        LibraryDto libraryDto = new LibraryDto("Biblioteca");
-        String libraryId = this.webTestClient
+    String createLibrary(String name){
+        return this.webTestClient
                 .post().uri(LibraryResource.LIBRARIES)
-                .body(BodyInserters.fromObject(libraryDto))
+                .body(BodyInserters.fromObject(new LibraryDto(name)))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(BookDto.class)
                 .returnResult().getResponseBody().getId();
+    }
+    @Test
+    void testSearch(){
+        String libraryId = this.createLibrary("Biblioteca");
         this.createBook("El ladrón del rayo", "Rick Riordan", libraryId);
         this.createBook("Reinos de Cristal", "Iria G. Parente, Selene M. Pascual", libraryId);
         this.createBook("La batalla del laberinto", "Rick Riordan", libraryId);
@@ -94,5 +79,21 @@ public class BookResourceIT {
                 .expectBodyList(BookDto.class)
                 .returnResult().getResponseBody();
         assertFalse(themes.isEmpty());
+    }
+
+    @Test
+    void testUpdateTitle(){
+        String libraryId = this.createLibrary("Biblioteca");
+        String bookId = this.createBook("El ladrón de manzanas", "Rick Riordan", libraryId);
+        BookDto bookDto = new BookDto("El ladrón de manzanas", "Rick Riordan", libraryId);
+        bookDto.setTitle("El ladrón del rayo");
+        bookDto.setAuthor("Rick Riordan");
+        bookDto.setLibraryId(libraryId);
+        this.webTestClient
+                .put().uri(BookResource.BOOKS + BookResource.ID_ID + BookResource.TITLE, bookId)
+                .body(BodyInserters.fromObject(bookDto))
+                .exchange()
+                .expectStatus().isOk();
+
     }
 }
