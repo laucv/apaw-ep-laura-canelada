@@ -28,21 +28,6 @@ public class BookDto {
         this.id = book.getId();
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
 
     public String getAuthor() {
         return author;
@@ -52,12 +37,28 @@ public class BookDto {
         this.author = author;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getLibraryId() {
         return libraryId;
     }
 
     public void setLibraryId(String libraryId) {
         this.libraryId = libraryId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public void validate() {
