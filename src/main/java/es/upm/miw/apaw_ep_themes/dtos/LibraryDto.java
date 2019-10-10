@@ -13,8 +13,7 @@ public class LibraryDto {
         //empty for framework
     }
 
-    public LibraryDto(String id, String name) {
-        this.id = id;
+    public LibraryDto(String name) {
         this.name = name;
     }
 
