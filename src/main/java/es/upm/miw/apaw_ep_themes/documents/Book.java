@@ -1,7 +1,11 @@
 package es.upm.miw.apaw_ep_themes.documents;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Document
 public class Book {
@@ -14,10 +18,17 @@ public class Book {
 
     private boolean borrow;
 
-    public Book(String title, String author) {
+    @DBRef
+    private Library library;
+
+    private List<Genre> genres;
+
+    public Book(String title, String author, Library library) {
         this.title = title;
         this.author = author;
         this.borrow = false;
+        this.library = library;
+        this.genres = new ArrayList<>();
     }
 
     public String getId() {
@@ -52,6 +63,14 @@ public class Book {
         this.borrow = borrow;
     }
 
+    public Library getLibrary() {
+        return library;
+    }
+
+    public List<Genre> getGenres() {
+        return genres;
+    }
+
     @Override
     public String toString() {
         return "Book{" +
@@ -59,6 +78,8 @@ public class Book {
                 ", title='" + title + '\'' +
                 ", author='" + author + '\'' +
                 ", borrow=" + borrow +
+                ", library=" + library +
+                ", genres=" + genres +
                 '}';
     }
 }

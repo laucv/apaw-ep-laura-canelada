@@ -11,20 +11,20 @@ public class BookDto {
 
     private String author;
 
-    private boolean borrow;
+    private String libraryId;
 
-    public BookDto(){
+    public BookDto() {
         //empty for framework
     }
 
-    public BookDto(String title, String author) {
+    public BookDto(String title, String author, String libraryId) {
         this.title = title;
         this.author = author;
-        this.borrow = false;
+        this.libraryId = libraryId;
     }
 
-    public BookDto(Book book){
-        this(book.getTitle(), book.getAuthor());
+    public BookDto(Book book) {
+        this(book.getTitle(), book.getAuthor(), book.getLibrary().getId());
         this.id = book.getId();
     }
 
@@ -52,27 +52,27 @@ public class BookDto {
         this.author = author;
     }
 
-    public boolean isBorrow() {
-        return borrow;
+    public String getLibraryId() {
+        return libraryId;
     }
 
-    public void setBorrow(boolean borrow) {
-        this.borrow = borrow;
+    public void setLibraryId(String libraryId) {
+        this.libraryId = libraryId;
     }
 
-    public void validate(){
-        if(title == null || title.isEmpty() || author==null || author.isEmpty()){
-            throw new BadRequestException("Incomplete BookDao. ");
+    public void validate() {
+        if (title == null || title.isEmpty() || author == null || author.isEmpty() || libraryId == null || libraryId.isEmpty()) {
+            throw new BadRequestException("Incomplete BookDto. ");
         }
     }
 
     @Override
     public String toString() {
-        return "BookDao{" +
+        return "BookDto{" +
                 "id='" + id + '\'' +
                 ", title='" + title + '\'' +
                 ", author='" + author + '\'' +
-                ", borrow=" + borrow +
+                ", libraryId='" + libraryId + '\'' +
                 '}';
     }
 }
