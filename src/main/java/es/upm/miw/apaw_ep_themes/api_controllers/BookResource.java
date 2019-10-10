@@ -2,17 +2,18 @@ package es.upm.miw.apaw_ep_themes.api_controllers;
 
 import es.upm.miw.apaw_ep_themes.business_controller.BookBusinessController;
 import es.upm.miw.apaw_ep_themes.dtos.BookDto;
+import es.upm.miw.apaw_ep_themes.exceptions.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(BookResource.BOOKS)
 public class BookResource {
 
     static final String BOOKS = "/books";
+    static final String SEARCH = "/search";
 
     private BookBusinessController bookBusinessController;
 
@@ -25,5 +26,13 @@ public class BookResource {
     public BookDto create(@RequestBody BookDto bookDto){
         bookDto.validate();
         return this.bookBusinessController.create(bookDto);
+    }
+
+    @GetMapping(value = SEARCH)
+    public List<BookDto> find(@RequestParam String q){
+        if(!"author".equals(q.split(":")[0])){
+            throw new BadRequestException("query param q is incorrect, missing 'author:'");
+        }
+        return this.bookBusinessController.findByAuthor(q.split(":")[1]);
     }
 }

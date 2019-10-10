@@ -9,6 +9,9 @@ import es.upm.miw.apaw_ep_themes.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Controller
 public class BookBusinessController {
 
@@ -28,5 +31,12 @@ public class BookBusinessController {
         Book book = new Book(bookDto.getTitle(), bookDto.getAuthor(), library);
         this.bookDao.save(book);
         return new BookDto(book);
+    }
+
+    public List<BookDto> findByAuthor(String author){
+        return this.bookDao.findAll().stream()
+                .filter(book -> book.getAuthor().replaceAll("\\s","").equals(author))
+                .map(BookDto::new)
+                .collect(Collectors.toList());
     }
 }
