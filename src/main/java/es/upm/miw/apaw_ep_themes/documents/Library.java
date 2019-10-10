@@ -11,8 +11,7 @@ public class Library {
 
     private String name;
 
-    public Library(String id, String name) {
-        this.id = id;
+    public Library(String name) {
         this.name = name;
     }
 
