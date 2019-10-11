@@ -20,13 +20,13 @@ public class UserResourceIT {
 
     @Test
     void testDeleteUser() {
-    User user = new User("user1");
-    userDao.save(user);
-    UserDeleteDto userDeleteDto= new UserDeleteDto(user);
-    this.webTestClient
-            .delete().uri(UserResource.USERS + UserResource.ID_ID, userDeleteDto.getId())
-            .exchange()
-            .expectStatus().isOk();
+        User user = new User("user1");
+        userDao.save(user);
+        UserDeleteDto userDeleteDto = new UserDeleteDto(user);
+        this.webTestClient
+                .delete().uri(UserResource.USERS + UserResource.ID_ID, userDeleteDto.getId())
+                .exchange()
+                .expectStatus().isOk();
     }
 
     @Test

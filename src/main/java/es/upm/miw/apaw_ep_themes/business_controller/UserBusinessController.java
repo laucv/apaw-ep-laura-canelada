@@ -17,7 +17,7 @@ public class UserBusinessController {
     }
 
 
-    public void delete(String id){
+    public void delete(String id) {
         User user = this.userDao.findById(id).orElseThrow(() -> new NotFoundException("User id: " + id));
         this.userDao.delete(user);
     }
