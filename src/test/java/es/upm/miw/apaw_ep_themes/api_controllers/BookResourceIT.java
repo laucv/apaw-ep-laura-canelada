@@ -44,7 +44,7 @@ public class BookResourceIT {
                 .expectStatus().isEqualTo(HttpStatus.NOT_FOUND);
     }
 
-    String createBook(String title, String author, String libraryId){
+    String createBook(String title, String author, String libraryId) {
         return this.webTestClient
                 .post().uri(BookResource.BOOKS)
                 .body(BodyInserters.fromObject(new BookDto(title, author, libraryId)))
@@ -53,7 +53,7 @@ public class BookResourceIT {
                 .expectBody(BookDto.class).returnResult().getResponseBody().getId();
     }
 
-    String createLibrary(String name){
+    String createLibrary(String name) {
         return this.webTestClient
                 .post().uri(LibraryResource.LIBRARIES)
                 .body(BodyInserters.fromObject(new LibraryDto(name)))
@@ -62,8 +62,9 @@ public class BookResourceIT {
                 .expectBody(BookDto.class)
                 .returnResult().getResponseBody().getId();
     }
+
     @Test
-    void testSearch(){
+    void testSearch() {
         String libraryId = this.createLibrary("Biblioteca");
         this.createBook("El ladrón del rayo", "Rick Riordan", libraryId);
         this.createBook("Reinos de Cristal", "Iria G. Parente, Selene M. Pascual", libraryId);
@@ -82,7 +83,7 @@ public class BookResourceIT {
     }
 
     @Test
-    void testUpdateTitle(){
+    void testUpdateTitle() {
         String libraryId = this.createLibrary("Biblioteca");
         String bookId = this.createBook("El ladrón de manzanas", "Rick Riordan", libraryId);
         BookDto bookDto = new BookDto("El ladrón de manzanas", "Rick Riordan", libraryId);
@@ -94,6 +95,22 @@ public class BookResourceIT {
                 .body(BodyInserters.fromObject(bookDto))
                 .exchange()
                 .expectStatus().isOk();
+    }
 
+    @Test
+    void testPutNickNotFoundException() {
+        String bookId = this.createBook("El ladrón de manzanas", "Rick Riordan", this.createLibrary("Biblioteca"));
+        this.webTestClient
+                .put().uri(BookResource.BOOKS + BookResource.ID_ID + BookResource.TITLE, bookId)
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    void testPutNickBadRequestException() {
+        this.webTestClient
+                .put().uri(BookResource.BOOKS + BookResource.ID_ID + BookResource.TITLE, "no")
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST);
     }
 }
