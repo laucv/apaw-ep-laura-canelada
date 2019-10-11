@@ -1,9 +1,7 @@
 package es.upm.miw.apaw_ep_themes.api_controllers;
 
 import es.upm.miw.apaw_ep_themes.business_controller.UserBusinessController;
-import es.upm.miw.apaw_ep_themes.dtos.UserDeleteDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,7 +20,7 @@ public class UserResource {
 
 
     @DeleteMapping(value = ID_ID)
-    public void delete(@PathVariable String id){
+    public void delete(@PathVariable String id) {
         this.userBusinessController.delete(id);
     }
 }
