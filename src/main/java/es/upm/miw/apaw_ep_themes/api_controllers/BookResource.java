@@ -2,6 +2,7 @@ package es.upm.miw.apaw_ep_themes.api_controllers;
 
 import es.upm.miw.apaw_ep_themes.business_controller.BookBusinessController;
 import es.upm.miw.apaw_ep_themes.dtos.BookDto;
+import es.upm.miw.apaw_ep_themes.dtos.BookPatchDto;
 import es.upm.miw.apaw_ep_themes.exceptions.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -42,5 +43,11 @@ public class BookResource {
     public void updateTitle(@PathVariable String id, @RequestBody BookDto bookDto) {
         bookDto.validate();
         this.bookBusinessController.updateTitle(id, bookDto.getTitle());
+    }
+
+    @PatchMapping(value = ID_ID)
+    public void patch(@PathVariable String id, @RequestBody BookPatchDto bookPatchDto) {
+        bookPatchDto.validate();
+        this.bookBusinessController.patch(id, bookPatchDto);
     }
 }

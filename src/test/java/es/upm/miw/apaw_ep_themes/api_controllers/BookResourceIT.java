@@ -2,6 +2,7 @@ package es.upm.miw.apaw_ep_themes.api_controllers;
 
 import es.upm.miw.apaw_ep_themes.ApiTestConfig;
 import es.upm.miw.apaw_ep_themes.dtos.BookDto;
+import es.upm.miw.apaw_ep_themes.dtos.BookPatchDto;
 import es.upm.miw.apaw_ep_themes.dtos.LibraryDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,8 +99,8 @@ public class BookResourceIT {
     }
 
     @Test
-    void testPutNickNotFoundException() {
-        String bookId = this.createBook("El ladrón de manzanas", "Rick Riordan", this.createLibrary("Biblioteca"));
+    void testPutTitleNotFoundException() {
+        String bookId = this.createBook("El ladrón del rayo", "Rick Riordan", this.createLibrary("Biblioteca"));
         this.webTestClient
                 .put().uri(BookResource.BOOKS + BookResource.ID_ID + BookResource.TITLE, bookId)
                 .exchange()
@@ -107,10 +108,39 @@ public class BookResourceIT {
     }
 
     @Test
-    void testPutNickBadRequestException() {
+    void testPutTitleBadRequestException() {
         this.webTestClient
                 .put().uri(BookResource.BOOKS + BookResource.ID_ID + BookResource.TITLE, "no")
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    void testBookUpdateBookPatchDtoException() {
+        String bookId = this.createBook("El ladrón del rayo", "Rick Riordan", this.createLibrary("Biblioteca"));
+        this.webTestClient
+                .patch().uri(BookResource.BOOKS + BookResource.ID_ID, bookId)
+                .body(BodyInserters.fromObject(new BookPatchDto()))
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    void testBookUpdateIdException() {
+        this.webTestClient
+                .patch().uri(BookResource.BOOKS + BookResource.ID_ID, "no")
+                .body(BodyInserters.fromObject(new BookPatchDto("title", "other")))
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void testUserUpdate() {
+        String bookId = this.createBook("El ladrón de manzanas", "Rick Riordan", this.createLibrary("Biblioteca"));
+        this.webTestClient
+                .patch().uri(BookResource.BOOKS + BookResource.ID_ID, bookId)
+                .body(BodyInserters.fromObject(new BookPatchDto("title", "El ladrón del rayo")))
+                .exchange()
+                .expectStatus().isOk();
     }
 }

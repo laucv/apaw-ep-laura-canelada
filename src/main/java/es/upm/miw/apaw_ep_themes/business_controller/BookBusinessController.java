@@ -5,6 +5,8 @@ import es.upm.miw.apaw_ep_themes.daos.LibraryDao;
 import es.upm.miw.apaw_ep_themes.documents.Book;
 import es.upm.miw.apaw_ep_themes.documents.Library;
 import es.upm.miw.apaw_ep_themes.dtos.BookDto;
+import es.upm.miw.apaw_ep_themes.dtos.BookPatchDto;
+import es.upm.miw.apaw_ep_themes.exceptions.BadRequestException;
 import es.upm.miw.apaw_ep_themes.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -40,9 +42,31 @@ public class BookBusinessController {
                 .collect(Collectors.toList());
     }
 
+    public Book findBookByIdAssured(String id) {
+        return this.bookDao.findById(id).orElseThrow(() -> new NotFoundException("Book id: " + id));
+    }
+
     public void updateTitle(String id, String title) {
-        Book book = this.bookDao.findById(id).orElseThrow(() -> new NotFoundException("Book id: " + id));
+        Book book = this.findBookByIdAssured(id);
         book.setTitle(title);
+        this.bookDao.save(book);
+    }
+
+    public void patch(String id, BookPatchDto bookPatchDto) {
+        Book book = this.findBookByIdAssured(id);
+        switch (bookPatchDto.getPath()) {
+            case "title":
+                book.setTitle(bookPatchDto.getNewValue());
+                break;
+            case "author":
+                book.setAuthor(bookPatchDto.getNewValue());
+                break;
+            case "libraryId":
+                book.getLibrary().setId(bookPatchDto.getNewValue());
+                break;
+            default:
+                throw new BadRequestException("BookPatchDto is invalid");
+        }
         this.bookDao.save(book);
     }
 }
