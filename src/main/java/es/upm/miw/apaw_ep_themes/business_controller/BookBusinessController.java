@@ -3,6 +3,7 @@ package es.upm.miw.apaw_ep_themes.business_controller;
 import es.upm.miw.apaw_ep_themes.daos.BookDao;
 import es.upm.miw.apaw_ep_themes.daos.LibraryDao;
 import es.upm.miw.apaw_ep_themes.documents.Book;
+import es.upm.miw.apaw_ep_themes.documents.BookBuilder;
 import es.upm.miw.apaw_ep_themes.documents.Library;
 import es.upm.miw.apaw_ep_themes.dtos.BookDto;
 import es.upm.miw.apaw_ep_themes.dtos.BookPatchDto;
@@ -30,7 +31,7 @@ public class BookBusinessController {
     public BookDto create(BookDto bookDto) {
         Library library = this.libraryDao.findById(bookDto.getLibraryId())
                 .orElseThrow(() -> new NotFoundException("User id: " + bookDto.getLibraryId()));
-        Book book = new Book(bookDto.getTitle(), bookDto.getAuthor(), library);
+        Book book = new BookBuilder(bookDto.getTitle(), bookDto.getAuthor(), library).build();
         this.bookDao.save(book);
         return new BookDto(book);
     }
