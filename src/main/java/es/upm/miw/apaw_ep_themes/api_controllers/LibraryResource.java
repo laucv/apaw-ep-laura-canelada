@@ -3,6 +3,7 @@ package es.upm.miw.apaw_ep_themes.api_controllers;
 import es.upm.miw.apaw_ep_themes.business_controller.LibraryBusinessController;
 import es.upm.miw.apaw_ep_themes.dtos.LibraryDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +22,7 @@ public class LibraryResource {
         this.libraryBusinessController = libraryBusinessController;
     }
 
-    @PostMapping
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE})
     public LibraryDto create(@RequestBody LibraryDto libraryDto) {
         libraryDto.validate();
         return this.libraryBusinessController.create(libraryDto);
