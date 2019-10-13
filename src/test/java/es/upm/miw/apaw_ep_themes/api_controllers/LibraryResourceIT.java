@@ -17,7 +17,7 @@ public class LibraryResourceIT {
     private WebTestClient webTestClient;
 
     @Test
-    void testCreate() {
+    void testCreateLibrary() {
         LibraryDto libraryDto = this.webTestClient
                 .post().uri(LibraryResource.LIBRARIES)
                 .body(BodyInserters.fromObject(new LibraryDto("Biblioteca Municipal de Coslada")))
