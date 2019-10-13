@@ -40,13 +40,13 @@ public class BookResource {
         return this.bookBusinessController.findByAuthor(q.split(":")[1]);
     }
 
-    @PutMapping(value = ID_ID + TITLE)
+    @PutMapping(value = ID_ID + TITLE, consumes = {MediaType.APPLICATION_JSON_VALUE})
     public void updateTitle(@PathVariable String id, @RequestBody BookDto bookDto) {
         bookDto.validate();
         this.bookBusinessController.updateTitle(id, bookDto.getTitle());
     }
 
-    @PatchMapping(value = ID_ID)
+    @PatchMapping(value = ID_ID, consumes = {MediaType.APPLICATION_JSON_VALUE})
     public void patch(@PathVariable String id, @RequestBody BookPatchDto bookPatchDto) {
         bookPatchDto.validate();
         this.bookBusinessController.patch(id, bookPatchDto);
