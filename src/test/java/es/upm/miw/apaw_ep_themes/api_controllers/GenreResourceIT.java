@@ -19,7 +19,7 @@ public class GenreResourceIT {
     private WebTestClient webTestClient;
 
     @Test
-    void testCreate() {
+    void testCreateGenre() {
         GenreDto genreDto = this.webTestClient
                 .post().uri(GenreResource.GENRES)
                 .body(BodyInserters.fromObject(new GenreDto("Ciencia ficción")))
@@ -31,7 +31,7 @@ public class GenreResourceIT {
     }
 
     @Test
-    void testCreateLibraryException() {
+    void testCreateGenreException() {
         GenreDto genreDto = new GenreDto();
         this.webTestClient
                 .post().uri(GenreResource.GENRES)

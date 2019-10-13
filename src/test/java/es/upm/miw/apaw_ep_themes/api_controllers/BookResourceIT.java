@@ -21,7 +21,7 @@ public class BookResourceIT {
     private WebTestClient webTestClient;
 
     @Test
-    void testCreate() {
+    void testCreateBook() {
         this.createBook("El ladrón del rayo", "Rick Riordan", this.createLibrary("Biblioteca"));
     }
 
@@ -65,7 +65,7 @@ public class BookResourceIT {
     }
 
     @Test
-    void testSearch() {
+    void testSearchByAuthor() {
         String libraryId = this.createLibrary("Biblioteca");
         this.createBook("El ladrón del rayo", "Rick Riordan", libraryId);
         this.createBook("Reinos de Cristal", "Iria G. Parente, Selene M. Pascual", libraryId);
@@ -135,7 +135,7 @@ public class BookResourceIT {
     }
 
     @Test
-    void testUserUpdate() {
+    void testBookUpdate() {
         String bookId = this.createBook("El ladrón de manzanas", "Rick Riordan", this.createLibrary("Biblioteca"));
         this.webTestClient
                 .patch().uri(BookResource.BOOKS + BookResource.ID_ID, bookId)
