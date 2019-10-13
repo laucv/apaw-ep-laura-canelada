@@ -7,7 +7,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>apaw-ep-laura-canelada</artifactId>
     <groupId>es.upm.miw</groupId>
-    <version>1.0.1-Release</version>
+    <version>1.0.2-Release</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}.${project.artifactId}</name>
