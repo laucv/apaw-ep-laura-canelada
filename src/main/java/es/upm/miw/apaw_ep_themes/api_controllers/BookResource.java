@@ -5,6 +5,7 @@ import es.upm.miw.apaw_ep_themes.dtos.BookDto;
 import es.upm.miw.apaw_ep_themes.dtos.BookPatchDto;
 import es.upm.miw.apaw_ep_themes.exceptions.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class BookResource {
         this.bookBusinessController = bookBusinessController;
     }
 
-    @PostMapping
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE})
     public BookDto create(@RequestBody BookDto bookDto) {
         bookDto.validate();
         return this.bookBusinessController.create(bookDto);
