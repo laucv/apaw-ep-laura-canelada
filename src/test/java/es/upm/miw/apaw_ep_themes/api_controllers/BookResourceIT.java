@@ -45,13 +45,13 @@ public class BookResourceIT {
                 .expectStatus().isEqualTo(HttpStatus.NOT_FOUND);
     }
 
-    String createBook(String title, String author, String libraryId) {
+    BookDto createBook(String title, String author, String libraryId) {
         return this.webTestClient
                 .post().uri(BookResource.BOOKS)
                 .body(BodyInserters.fromObject(new BookDto(title, author, libraryId)))
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(BookDto.class).returnResult().getResponseBody().getId();
+                .expectBody(BookDto.class).returnResult().getResponseBody();
     }
 
     String createLibrary(String name) {
@@ -86,7 +86,7 @@ public class BookResourceIT {
     @Test
     void testUpdateTitle() {
         String libraryId = this.createLibrary("Biblioteca");
-        String bookId = this.createBook("El ladrón de manzanas", "Rick Riordan", libraryId);
+        String bookId = this.createBook("El ladrón de manzanas", "Rick Riordan", libraryId).getId();
         BookDto bookDto = new BookDto("El ladrón de manzanas", "Rick Riordan", libraryId);
         bookDto.setTitle("El ladrón del rayo");
         bookDto.setAuthor("Rick Riordan");
@@ -100,7 +100,7 @@ public class BookResourceIT {
 
     @Test
     void testPutTitleNotFoundException() {
-        String bookId = this.createBook("El ladrón del rayo", "Rick Riordan", this.createLibrary("Biblioteca"));
+        String bookId = this.createBook("El ladrón del rayo", "Rick Riordan", this.createLibrary("Biblioteca")).getId();
         this.webTestClient
                 .put().uri(BookResource.BOOKS + BookResource.ID_ID + BookResource.TITLE, bookId)
                 .exchange()
@@ -117,7 +117,7 @@ public class BookResourceIT {
 
     @Test
     void testBookUpdateBookPatchDtoException() {
-        String bookId = this.createBook("El ladrón del rayo", "Rick Riordan", this.createLibrary("Biblioteca"));
+        String bookId = this.createBook("El ladrón del rayo", "Rick Riordan", this.createLibrary("Biblioteca")).getId();
         this.webTestClient
                 .patch().uri(BookResource.BOOKS + BookResource.ID_ID, bookId)
                 .body(BodyInserters.fromObject(new BookPatchDto()))
@@ -136,11 +136,12 @@ public class BookResourceIT {
 
     @Test
     void testUserUpdate() {
-        String bookId = this.createBook("El ladrón de manzanas", "Rick Riordan", this.createLibrary("Biblioteca"));
+        String bookId = this.createBook("El ladrón de manzanas", "Rick Riordan", this.createLibrary("Biblioteca")).getId();
         this.webTestClient
                 .patch().uri(BookResource.BOOKS + BookResource.ID_ID, bookId)
                 .body(BodyInserters.fromObject(new BookPatchDto("title", "El ladrón del rayo")))
                 .exchange()
                 .expectStatus().isOk();
     }
+
 }
