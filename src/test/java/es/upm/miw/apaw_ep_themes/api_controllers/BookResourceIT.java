@@ -1,6 +1,7 @@
 package es.upm.miw.apaw_ep_themes.api_controllers;
 
 import es.upm.miw.apaw_ep_themes.ApiTestConfig;
+import es.upm.miw.apaw_ep_themes.business_controller.BookBusinessController;
 import es.upm.miw.apaw_ep_themes.dtos.BookDto;
 import es.upm.miw.apaw_ep_themes.dtos.BookPatchDto;
 import es.upm.miw.apaw_ep_themes.dtos.LibraryDto;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import reactor.test.StepVerifier;
 
 import java.util.List;
 
@@ -19,6 +21,9 @@ public class BookResourceIT {
 
     @Autowired
     private WebTestClient webTestClient;
+
+    @Autowired
+    private BookBusinessController bookBusinessController;
 
     @Test
     void testCreate() {
@@ -45,13 +50,13 @@ public class BookResourceIT {
                 .expectStatus().isEqualTo(HttpStatus.NOT_FOUND);
     }
 
-    String createBook(String title, String author, String libraryId) {
+    BookDto createBook(String title, String author, String libraryId) {
         return this.webTestClient
                 .post().uri(BookResource.BOOKS)
                 .body(BodyInserters.fromObject(new BookDto(title, author, libraryId)))
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(BookDto.class).returnResult().getResponseBody().getId();
+                .expectBody(BookDto.class).returnResult().getResponseBody();
     }
 
     String createLibrary(String name) {
@@ -86,7 +91,7 @@ public class BookResourceIT {
     @Test
     void testUpdateTitle() {
         String libraryId = this.createLibrary("Biblioteca");
-        String bookId = this.createBook("El ladrón de manzanas", "Rick Riordan", libraryId);
+        String bookId = this.createBook("El ladrón de manzanas", "Rick Riordan", libraryId).getId();
         BookDto bookDto = new BookDto("El ladrón de manzanas", "Rick Riordan", libraryId);
         bookDto.setTitle("El ladrón del rayo");
         bookDto.setAuthor("Rick Riordan");
@@ -100,7 +105,7 @@ public class BookResourceIT {
 
     @Test
     void testPutTitleNotFoundException() {
-        String bookId = this.createBook("El ladrón del rayo", "Rick Riordan", this.createLibrary("Biblioteca"));
+        String bookId = this.createBook("El ladrón del rayo", "Rick Riordan", this.createLibrary("Biblioteca")).getId();
         this.webTestClient
                 .put().uri(BookResource.BOOKS + BookResource.ID_ID + BookResource.TITLE, bookId)
                 .exchange()
@@ -117,7 +122,7 @@ public class BookResourceIT {
 
     @Test
     void testBookUpdateBookPatchDtoException() {
-        String bookId = this.createBook("El ladrón del rayo", "Rick Riordan", this.createLibrary("Biblioteca"));
+        String bookId = this.createBook("El ladrón del rayo", "Rick Riordan", this.createLibrary("Biblioteca")).getId();
         this.webTestClient
                 .patch().uri(BookResource.BOOKS + BookResource.ID_ID, bookId)
                 .body(BodyInserters.fromObject(new BookPatchDto()))
@@ -136,11 +141,23 @@ public class BookResourceIT {
 
     @Test
     void testUserUpdate() {
-        String bookId = this.createBook("El ladrón de manzanas", "Rick Riordan", this.createLibrary("Biblioteca"));
+        String bookId = this.createBook("El ladrón de manzanas", "Rick Riordan", this.createLibrary("Biblioteca")).getId();
         this.webTestClient
                 .patch().uri(BookResource.BOOKS + BookResource.ID_ID, bookId)
                 .body(BodyInserters.fromObject(new BookPatchDto("title", "El ladrón del rayo")))
                 .exchange()
                 .expectStatus().isOk();
+    }
+
+    @Test
+    void testBookPublisher(){
+        BookDto bookDto = new BookDto("Si no despierto", "Lauren Oliver", this.createLibrary("Biblioteca"));
+        StepVerifier
+                .create(bookBusinessController.publisher())
+                .then(() -> bookBusinessController.create
+                        (bookDto))
+                .expectNext("New book added")
+                .thenCancel()
+                .verify();
     }
 }

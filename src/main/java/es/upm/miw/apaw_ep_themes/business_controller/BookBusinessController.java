@@ -11,6 +11,8 @@ import es.upm.miw.apaw_ep_themes.exceptions.BadRequestException;
 import es.upm.miw.apaw_ep_themes.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import reactor.core.publisher.EmitterProcessor;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,10 +24,17 @@ public class BookBusinessController {
 
     private LibraryDao libraryDao;
 
+    private EmitterProcessor<String> newBookFlush;
+
     @Autowired
     public BookBusinessController(BookDao bookDao, LibraryDao libraryDao) {
         this.bookDao = bookDao;
         this.libraryDao = libraryDao;
+        this.newBookFlush = EmitterProcessor.create();
+    }
+
+    public Flux<String> publisher(){
+        return this.newBookFlush;
     }
 
     public BookDto create(BookDto bookDto) {
@@ -33,6 +42,7 @@ public class BookBusinessController {
                 .orElseThrow(() -> new NotFoundException("User id: " + bookDto.getLibraryId()));
         Book book = new BookBuilder(bookDto.getTitle(), bookDto.getAuthor(), library).build();
         this.bookDao.save(book);
+        this.newBookFlush.onNext("New book added");
         return new BookDto(book);
     }
 
