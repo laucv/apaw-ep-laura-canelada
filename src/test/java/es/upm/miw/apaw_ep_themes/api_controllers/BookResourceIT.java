@@ -105,17 +105,23 @@ public class BookResourceIT {
 
     @Test
     void testPutTitleNotFoundException() {
-        String bookId = this.createBook("El ladrón del rayo", "Rick Riordan", this.createLibrary("Biblioteca")).getId();
+        BookDto bookDto = new BookDto("aaaaaa", "Rick Riordan", this.createLibrary("Biblioteca"));
+        bookDto.setId("no");
+        bookDto.setTitle("El ladrón del rayo");
         this.webTestClient
-                .put().uri(BookResource.BOOKS + BookResource.ID_ID + BookResource.TITLE, bookId)
+                .put().uri(BookResource.BOOKS + BookResource.ID_ID + BookResource.TITLE, bookDto.getId())
+                .body(BodyInserters.fromObject(bookDto))
                 .exchange()
-                .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST);
+                .expectStatus().isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
     void testPutTitleBadRequestException() {
+        BookDto bookDto = new BookDto();
+        bookDto.setId("no");
         this.webTestClient
-                .put().uri(BookResource.BOOKS + BookResource.ID_ID + BookResource.TITLE, "no")
+                .put().uri(BookResource.BOOKS + BookResource.ID_ID + BookResource.TITLE, bookDto.getId())
+                .body(BodyInserters.fromObject(bookDto))
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST);
     }

@@ -3,6 +3,7 @@ package es.upm.miw.apaw_ep_themes.api_controllers;
 import es.upm.miw.apaw_ep_themes.business_controller.BookProposalBusinessController;
 import es.upm.miw.apaw_ep_themes.dtos.BookProposalDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +22,7 @@ public class BookProposalResource {
         this.bookProposalBusinessController = bookProposalBusinessController;
     }
 
-    @PostMapping
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE})
     public BookProposalDto create(@RequestBody BookProposalDto bookProposalDto) {
         bookProposalDto.validate();
         return this.bookProposalBusinessController.create(bookProposalDto);
