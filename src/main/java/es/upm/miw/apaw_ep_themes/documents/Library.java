@@ -4,7 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-public class Library {
+public class Library implements TreeLibrary{
 
     @Id
     private String id;
@@ -37,5 +37,25 @@ public class Library {
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean isComposite() {
+        return false;
+    }
+
+    @Override
+    public void add(TreeLibrary treeLibrary) {
+        //do nothing because is a leaf
+    }
+
+    @Override
+    public void remove(TreeLibrary treeLibrary) {
+        //do nothing because is a leaf
+    }
+
+    @Override
+    public int size() {
+        return 1;
     }
 }
