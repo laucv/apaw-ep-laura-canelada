@@ -13,8 +13,8 @@ public class TreeLibraryCompositeTest {
 
     @BeforeEach
     void beforeEach() {
-        libraryRoot = new TreeLibraryComposite("library1", "Library Root");
-        libraryNode = new TreeLibraryComposite("library2", "LibraryNode");
+        libraryRoot = new TreeLibraryComposite("Library Root");
+        libraryNode = new TreeLibraryComposite("LibraryNode");
         library = new Library("Library");
         libraryRoot.add(libraryNode);
         libraryNode.add(library);

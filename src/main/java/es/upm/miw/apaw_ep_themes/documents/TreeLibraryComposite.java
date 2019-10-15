@@ -5,16 +5,18 @@ import java.util.List;
 
 public class TreeLibraryComposite implements TreeLibrary {
 
-    private String id;
 
     private String name;
 
     private List<TreeLibrary> treeLibraryList;
 
-    public TreeLibraryComposite(String id, String name) {
-        this.id = id;
+    public TreeLibraryComposite(String name) {
         this.name = name;
         this.treeLibraryList = new ArrayList<>();
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override
