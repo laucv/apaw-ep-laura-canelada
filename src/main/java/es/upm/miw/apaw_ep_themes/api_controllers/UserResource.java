@@ -18,7 +18,6 @@ public class UserResource {
         this.userBusinessController = userBusinessController;
     }
 
-
     @DeleteMapping(value = ID_ID)
     public void delete(@PathVariable String id) {
         this.userBusinessController.delete(id);

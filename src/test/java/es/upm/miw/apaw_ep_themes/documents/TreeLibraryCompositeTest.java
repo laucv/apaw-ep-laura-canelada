@@ -21,21 +21,21 @@ public class TreeLibraryCompositeTest {
     }
 
     @Test
-    void testIsComposite(){
-        assertTrue(libraryRoot.isComposite());
-        assertTrue(libraryNode.isComposite());
-        assertFalse(library.isComposite());
-    }
-
-    @Test
-    void testAdd(){
+    void testAdd() {
         TreeLibrary node = new Library("Library2");
         libraryRoot.add(node);
         assertEquals(2, libraryRoot.size());
     }
 
     @Test
-    void testRemove(){
+    void testIsComposite() {
+        assertTrue(libraryRoot.isComposite());
+        assertTrue(libraryNode.isComposite());
+        assertFalse(library.isComposite());
+    }
+
+    @Test
+    void testRemove() {
         libraryNode.remove(library);
         assertEquals(0, libraryNode.size());
     }

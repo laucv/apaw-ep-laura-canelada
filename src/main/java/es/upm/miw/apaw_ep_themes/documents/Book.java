@@ -9,6 +9,7 @@ import java.util.List;
 
 @Document
 public class Book {
+
     @Id
     private String id;
 
