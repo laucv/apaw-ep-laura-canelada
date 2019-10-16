@@ -7,13 +7,13 @@ import es.upm.miw.apaw_ep_themes.documents.BookBuilder;
 import es.upm.miw.apaw_ep_themes.documents.Library;
 import es.upm.miw.apaw_ep_themes.dtos.BookDto;
 import es.upm.miw.apaw_ep_themes.dtos.BookPatchDto;
+
 import es.upm.miw.apaw_ep_themes.exceptions.BadRequestException;
 import es.upm.miw.apaw_ep_themes.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import reactor.core.publisher.EmitterProcessor;
 import reactor.core.publisher.Flux;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 public class BookBusinessController {
 
     private BookDao bookDao;
-
     private LibraryDao libraryDao;
 
     private EmitterProcessor<String> newBookFlush;
@@ -33,17 +32,17 @@ public class BookBusinessController {
         this.newBookFlush = EmitterProcessor.create();
     }
 
-    public Flux<String> publisher(){
-        return this.newBookFlush;
-    }
-
     public BookDto create(BookDto bookDto) {
         Library library = this.libraryDao.findById(bookDto.getLibraryId())
-                .orElseThrow(() -> new NotFoundException("User id: " + bookDto.getLibraryId()));
+                .orElseThrow(() -> new NotFoundException("Library id: " + bookDto.getLibraryId()));
         Book book = new BookBuilder(bookDto.getTitle(), bookDto.getAuthor(), library).build();
         this.bookDao.save(book);
         this.newBookFlush.onNext("New book added");
         return new BookDto(book);
+    }
+
+    public Book findBookByIdAssured(String id) {
+        return this.bookDao.findById(id).orElseThrow(() -> new NotFoundException("Book id: " + id));
     }
 
     public List<BookDto> findByAuthor(String author) {
@@ -51,16 +50,6 @@ public class BookBusinessController {
                 .filter(book -> book.getAuthor().replaceAll("\\s", "").equals(author))
                 .map(BookDto::new)
                 .collect(Collectors.toList());
-    }
-
-    public Book findBookByIdAssured(String id) {
-        return this.bookDao.findById(id).orElseThrow(() -> new NotFoundException("Book id: " + id));
-    }
-
-    public void updateTitle(String id, String title) {
-        Book book = this.findBookByIdAssured(id);
-        book.setTitle(title);
-        this.bookDao.save(book);
     }
 
     public void patch(String id, BookPatchDto bookPatchDto) {
@@ -78,6 +67,16 @@ public class BookBusinessController {
             default:
                 throw new BadRequestException("BookPatchDto is invalid");
         }
+        this.bookDao.save(book);
+    }
+
+    public Flux<String> publisher() {
+        return this.newBookFlush;
+    }
+
+    public void updateTitle(String id, String title) {
+        Book book = this.findBookByIdAssured(id);
+        book.setTitle(title);
         this.bookDao.save(book);
     }
 }
